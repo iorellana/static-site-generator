@@ -11,5 +11,8 @@ This project is a static site generator that converts Markdown files into HTML. 
 ## Installation
 Not much installation needed. Just clone the repository and run the project.
 
-# Example command to run your project
-python main.py
+## Run the project
+./main.sh
+
+## Run the tests
+./test.sh
