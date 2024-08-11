@@ -20,7 +20,7 @@ children: {self.children}
 props: {self.props}"""
     
 class LeafNode(HTMLNode):
-    def __ini__(self, tag=None, value=None, props=None):
+    def __init__(self, tag=None, value=None, props=None):
         super().__init__(tag, value, props=props)
 
     def to_html(self):

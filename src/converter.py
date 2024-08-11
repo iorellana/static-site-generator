@@ -105,8 +105,3 @@ def extract_markdown_links(text):
     pattern = r"(?<!!)\[(.*?)\]\((.*?)\)"
     matches = re.findall(pattern, text)
     return matches
-
-res = text_to_textnodes('This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)')
-# Pretty show all TextNodes
-for node in res:
-    print(node)
