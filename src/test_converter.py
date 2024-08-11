@@ -12,7 +12,8 @@ from converter import (extract_markdown_images,
                         split_nodes_delimiter, 
                         split_nodes_image, 
                         split_nodes_link,
-                        text_to_textnodes)
+                        text_to_textnodes,
+                        markdown_to_blocks)
 
 class TestSplitNodesDelimiter(unittest.TestCase):
     def test_valid_delimiter(self):
@@ -237,5 +238,26 @@ class TestInlineMarkdown(unittest.TestCase):
             nodes,
         )
         
+class TestMarkdownToBlocks(unittest.TestCase):
+    def test_single_block(self):
+        markdown = "This is a single block"
+        expected_blocks = ["This is a single block"]
+        self.assertEqual(markdown_to_blocks(markdown), expected_blocks)
+
+    def test_multiple_blocks(self):
+        markdown = "This is the first block\n\nThis is the second block\n\nThis is the third block"
+        expected_blocks = ["This is the first block", "This is the second block", "This is the third block"]
+        self.assertEqual(markdown_to_blocks(markdown), expected_blocks)
+
+    def test_empty_blocks(self):
+        markdown = "\n\n\n"
+        expected_blocks = []
+        self.assertEqual(markdown_to_blocks(markdown), expected_blocks)
+
+    def test_blocks_with_spaces(self):
+        markdown = "   This is the first block   \n\n   This is the second block   \n\n   This is the third block   "
+        expected_blocks = ["This is the first block", "This is the second block", "This is the third block"]
+        self.assertEqual(markdown_to_blocks(markdown), expected_blocks)
+
 if __name__ == "__main__":
     unittest.main()

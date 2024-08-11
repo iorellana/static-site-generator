@@ -105,3 +105,13 @@ def extract_markdown_links(text):
     pattern = r"(?<!!)\[(.*?)\]\((.*?)\)"
     matches = re.findall(pattern, text)
     return matches
+
+def markdown_to_blocks(markdown):
+    # use regex to get two newlines with any number of spaces between them
+    blocks = re.split(r"\n\s*\n", markdown)
+    curated_blocks = []
+    for block in blocks:
+        if block == "":
+            continue
+        curated_blocks.append(block.strip())
+    return curated_blocks
