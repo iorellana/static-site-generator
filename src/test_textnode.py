@@ -1,6 +1,6 @@
 import unittest
 from enum import Enum
-from textnode import TextNode, text_node_to_html_node, TextType
+from textnode import TextNode, text_node_to_html_node, text_type_text, text_type_bold, text_type_italic, text_type_code, text_type_image, text_type_link
 from htmlnode import HTMLNode, LeafNode, ParentNode
 
 class TestTextNode(unittest.TestCase):
@@ -19,32 +19,32 @@ class TestTextNode(unittest.TestCase):
 
 class TestTextNodeToHTMLNode(unittest.TestCase):
     def test_text_type_text(self):
-        text_node = TextNode("Hello, World!", TextType.text_type_text)
+        text_node = TextNode("Hello, World!", text_type_text)
         expected_node = LeafNode(value="Hello, World!")
         self.assertEqual(text_node_to_html_node(text_node).to_html(), expected_node.to_html())
 
     def test_text_type_bold(self):
-        text_node = TextNode("Hello, World!", TextType.text_type_bold)
+        text_node = TextNode("Hello, World!", text_type_bold)
         expected_node = LeafNode(tag="b", value="Hello, World!")
         self.assertEqual(text_node_to_html_node(text_node).to_html(), expected_node.to_html())
 
     def test_text_type_italic(self):
-        text_node = TextNode("Hello, World!", TextType.text_type_italic)
+        text_node = TextNode("Hello, World!", text_type_italic)
         expected_node = LeafNode(tag="i", value="Hello, World!")
         self.assertEqual(text_node_to_html_node(text_node).to_html(), expected_node.to_html())
 
     def test_text_type_code(self):
-        text_node = TextNode("print('Hello, World!')", TextType.text_type_code)
+        text_node = TextNode("print('Hello, World!')", text_type_code)
         expected_node = LeafNode(tag="code", value="print('Hello, World!')")
         self.assertEqual(text_node_to_html_node(text_node).to_html(), expected_node.to_html())
 
     def test_text_type_link(self):
-        text_node = TextNode("GitHub", TextType.text_type_link, url="https://github.com")
+        text_node = TextNode("GitHub", text_type_link, url="https://github.com")
         expected_node = LeafNode(tag="a", value="GitHub", props={"href": "https://github.com"})
         self.assertEqual(text_node_to_html_node(text_node).to_html(), expected_node.to_html())
 
     def test_text_type_image(self):
-        text_node = TextNode("Logo", TextType.text_type_image, url="https://example.com/logo.png")
+        text_node = TextNode("Logo", text_type_image, url="https://example.com/logo.png")
         expected_node = LeafNode(tag="img", value="", props={"src": "https://example.com/logo.png", "alt": "Logo"})
         self.assertEqual(text_node_to_html_node(text_node).to_html(), expected_node.to_html())
 
