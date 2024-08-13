@@ -1,4 +1,5 @@
 import unittest
+from htmlnode import HTMLNode
 from textnode import (TextNode, 
                       text_type_text, 
                       text_type_bold, 
@@ -8,12 +9,12 @@ from textnode import (TextNode,
                       text_type_link)
 import unittest
 from converter import (extract_markdown_images, 
-                        extract_markdown_links, 
+                        extract_markdown_links, markdown_to_html_node, 
                         split_nodes_delimiter, 
                         split_nodes_image, 
                         split_nodes_link,
                         text_to_textnodes,
-                        markdown_to_blocks)
+                        markdown_to_blocks, block_type_header, block_type_code, block_type_quote, block_type_unordered_list, block_type_ordered_list, block_type_paragraph, block_to_block_type)
 
 class TestSplitNodesDelimiter(unittest.TestCase):
     def test_valid_delimiter(self):
@@ -258,6 +259,67 @@ class TestMarkdownToBlocks(unittest.TestCase):
         markdown = "   This is the first block   \n\n   This is the second block   \n\n   This is the third block   "
         expected_blocks = ["This is the first block", "This is the second block", "This is the third block"]
         self.assertEqual(markdown_to_blocks(markdown), expected_blocks)
+
+class TestBlockToBlockType(unittest.TestCase):
+    def test_header_block(self):
+        block = "# This is a header"
+        self.assertEqual(block_to_block_type(block), block_type_header)
+
+    def test_code_block(self):
+        block = "```python\nprint('Hello, World!')\n```"
+        self.assertEqual(block_to_block_type(block), block_type_code)
+
+    def test_quote_block(self):
+        block = "> This is a quote"
+        self.assertEqual(block_to_block_type(block), block_type_quote)
+
+    def test_unordered_list_block(self):
+        block = "- Item 1\n- Item 2\n- Item 3"
+        self.assertEqual(block_to_block_type(block), block_type_unordered_list)
+
+    def test_ordered_list_block(self):
+        block = "1. Item 1\n2. Item 2\n3. Item 3"
+        self.assertEqual(block_to_block_type(block), block_type_ordered_list)
+
+    def test_paragraph_block(self):
+        block = "This is a paragraph"
+        self.assertEqual(block_to_block_type(block), block_type_paragraph)
+
+# PRE: Every to_html() has a initial div tag
+class TestMarkdownToHtmlNode(unittest.TestCase):
+    def test_header(self):
+        markdown = "# Hello world!"
+        expected_html = "<div><h1>Hello world!</h1></div>"
+        self.assertEqual(markdown_to_html_node(markdown).to_html(), expected_html)
+
+    def test_code_block(self):
+        markdown = "```python\nprint('Hello world!')\n```"
+        expected_html = "<div><pre><code>python\nprint('Hello world!')\n</code></pre></div>"
+        self.assertEqual(markdown_to_html_node(markdown).to_html(), expected_html)
+
+    def test_quote(self):
+        markdown = "> Hello world!"
+        expected_html = "<div><blockquote> Hello world!</blockquote></div>"
+        self.assertEqual(markdown_to_html_node(markdown).to_html(), expected_html)
+
+    def test_unordered_list(self):
+        markdown = "- item 1\n- item 2\n- item 3"
+        expected_html = "<div><ul><li>item 1</li><li>item 2</li><li>item 3</li></ul></div>"
+        self.assertEqual(markdown_to_html_node(markdown).to_html(), expected_html)
+
+    def test_ordered_list(self):
+        markdown = "1. item 1\n2. item 2\n3. item 3"
+        expected_html = "<div><ol><li>item 1</li><li>item 2</li><li>item 3</li></ol></div>"
+        self.assertEqual(markdown_to_html_node(markdown).to_html(), expected_html)
+
+    def test_paragraph(self):
+        markdown = "Hello world!"
+        expected_html = "<div><p>Hello world!</p></div>"
+        self.assertEqual(markdown_to_html_node(markdown).to_html(), expected_html)
+
+    def test_empty(self):
+        markdown = ""
+        self.assertRaises(ValueError, markdown_to_html_node, markdown)
 
 if __name__ == "__main__":
     unittest.main()

@@ -33,6 +33,8 @@ class LeafNode(HTMLNode):
 class ParentNode(HTMLNode):
     def __init__(self, tag=None, children=None, props=None):
         super().__init__(tag, children=children, props=props)
+        if self.children == None:
+            self.children = []
 
     def to_html(self):
         if self.tag == None:
