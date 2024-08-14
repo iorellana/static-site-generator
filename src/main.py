@@ -12,7 +12,7 @@ def main():
     os.mkdir(public_dir)
     copy_recursive(static_dir, public_dir)
     # generate index.html
-    generate_page("content/index.md", "template.html", "public/index.html")
+    generate_pages_recursive("content", "template.html", "public")
 
 def copy_recursive(src, dst):
     if isfile(src):
@@ -38,5 +38,12 @@ def generate_page(from_path, template_path, dest_path):
     with open(dest_path, "w", encoding="utf-8") as f:
         f.write(template_html)
     
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for l in os.listdir(dir_path_content):
+        if isfile(join(dir_path_content, l)) and l.endswith(".md"):
+            generate_page(join(dir_path_content, l), template_path, join(dest_dir_path, l.replace(".md", ".html")))
+        else:
+            generate_pages_recursive(join(dir_path_content, l), template_path, join(dest_dir_path, l))
 
-generate_page("content/index.md", "template.html", "public/index.html")
+if __name__ == "__main__":
+    main()
