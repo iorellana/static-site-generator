@@ -8,11 +8,9 @@ from textnode import (TextNode,
                       text_type_image, 
                       text_type_link)
 import unittest
-from converter import (extract_markdown_images, 
-                        extract_markdown_links, markdown_to_html_node, 
-                        split_nodes_delimiter, 
-                        split_nodes_image, 
-                        split_nodes_link,
+from converter import (extract_markdown_images, extract_markdown_links, extract_title,
+                       markdown_to_html_node, 
+                        split_nodes_delimiter, split_nodes_image, split_nodes_link,
                         text_to_textnodes,
                         markdown_to_blocks, block_type_header, block_type_code, block_type_quote, block_type_unordered_list, block_type_ordered_list, block_type_paragraph, block_to_block_type)
 
@@ -299,7 +297,7 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
 
     def test_quote(self):
         markdown = "> Hello world!"
-        expected_html = "<div><blockquote> Hello world!</blockquote></div>"
+        expected_html = "<div><blockquote>Hello world!</blockquote></div>"
         self.assertEqual(markdown_to_html_node(markdown).to_html(), expected_html)
 
     def test_unordered_list(self):
@@ -320,6 +318,22 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
     def test_empty(self):
         markdown = ""
         self.assertRaises(ValueError, markdown_to_html_node, markdown)
+
+class TestExtractTitle(unittest.TestCase):
+    def test_valid_title(self):
+        markdown = "# This is a valid title"
+        expected_title = "This is a valid title"
+        self.assertEqual(extract_title(markdown), expected_title)
+
+    def test_no_title(self):
+        markdown = "This is a paragraph without a title"
+        with self.assertRaises(ValueError):
+            extract_title(markdown)
+
+    def test_multiple_titles(self):
+        markdown = "# Title 1\n\n# Title 2"
+        expected_title = "Title 1"
+        self.assertEqual(extract_title(markdown), expected_title)
 
 if __name__ == "__main__":
     unittest.main()

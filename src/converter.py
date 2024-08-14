@@ -162,7 +162,7 @@ def markdown_to_html_node(markdown):
                 ParentNode("pre", children=[ParentNode("code", children=text_to_html_nodes(block[3:-3]))]))
         elif block_type == block_type_quote:
             html.children.append(
-                ParentNode("blockquote", children=text_to_html_nodes(block[1:])))
+                ParentNode("blockquote", children=text_to_html_nodes(block[1:].strip())))
         elif block_type == block_type_unordered_list:
             html.children.append(
                 ParentNode("ul", children=[ParentNode("li", text_to_html_nodes(line[2:])) for line in block.split("\n")]))
@@ -174,11 +174,9 @@ def markdown_to_html_node(markdown):
                 ParentNode("p", children=text_to_html_nodes(block)))
     return html
 
-# Test the previous function
-# print(markdown_to_html_node("# Hello world!").to_html())
-# print(markdown_to_html_node("Hello world!\n\n- item 1\n- item 2\n- item 3"))
-# print(markdown_to_html_node("Hello world!\n\n1. item 1\n2. item 2\n3. item 3"))
-# print(markdown_to_html_node("# Hello world!"))
-# print(markdown_to_html_node("```python\nprint('Hello world!')\n```").to_html())
-# print(markdown_to_html_node("> Hello world!"))
+def extract_title(markdown):
+    title = list(filter(lambda x: x.startswith("# "), markdown.split("\n")))
+    if len(title) == 0:
+        raise ValueError("No title found")
+    return title[0][2:]
 
